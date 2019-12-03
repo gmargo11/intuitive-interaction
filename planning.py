@@ -33,13 +33,41 @@ def create_plan(environment, agents, timesteps, cprob):
     			max_info_goal = max(non_visible_goals, key=non_visible_goals.get)
     			if max_goal > max_info_goal:
     				# move in direction of max_goal
+                    new_location = next_optimal_step(a.location, max_goal, environment.occupancy_map)
     			else:
     				# move in direction of max_info_goal
+                    new_location = next_optimal_step(a.location, max_info_goal, environment.occupancy_map)
     		# update agent and plan
     	
     	agent_plans[i] = plan
     	i += 1
 
     return environment, agents, agent_plans
+
+
+def next_optimal_step(start_loc, goal, occupancy_map):
+
+    def get_neighbors(node):
+        neighbors = []
+        for displacement in [[-1, 0], [1, 0], [0, -1], [0, 1]]:
+            xn = node[0] + displacement[0]
+            yn = node[1] + displacement[1]
+            if 0 <= xn < occupancy_map.shape[0] and 0 <= yn < occupancy_map.shape[1] and occupancy_map[xn, yn] == 0:
+                neighbors.append([node[0] + displacement[0], node[1] + displacement[1]])
+        return neighbors
+
+    # BFS
+    queue = [[start_loc]]
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+        if node == goal:
+            return path[1]
+        for neighbor in get_neighbors(node):
+            newpath = path[:]
+            newpath.append(neighbor)
+            queue.append(newpath)
+    return None
+
 
 
