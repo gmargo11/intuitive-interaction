@@ -1,5 +1,5 @@
 class Agent:
-    def __init__(rewards: dict, initial_location: tuple, initial_beliefs: list, environment):
+    def __init__(self, rewards: dict, initial_location: tuple, initial_beliefs: list, environment):
         # rewards is dictionary mapping goal: reward
         self.rewards = rewards
         self.visible_goals = {}
