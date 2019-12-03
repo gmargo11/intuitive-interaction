@@ -3,9 +3,10 @@ from agent import Agent
 from plan import Plan
 #from planning import create_plan
 #from inference import infer_communication
-from utils import display_state
+from utils import display_map_state, display_belief_state
 
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
@@ -30,10 +31,12 @@ if __name__ == "__main__":
     env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations)
 
     # define agents
-    agent1 = Agent(rewards=[3, 10], initial_location=(3, 7), initial_beliefs=[[0.5, 0.5], [0.5, 0.5]], environment=env)
-    agent2 = Agent(rewards=[3, 10], initial_location=(11, 7), initial_beliefs=[[0.5, 0.5], [0.5, 0.5]], environment=env)
+    agent1 = Agent(rewards={'A': 3, 'B': 10}, initial_location=(3, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent2 = Agent(rewards={'A': 5, 'B': 8}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
-    display_state(environment=env, agents=[agent1, agent2])
+    display_map_state(environment=env, agents=[agent1, agent2])
+    display_belief_state(agent=agent1)
+    plt.show()
 
     # generate plans
     #plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=20, cprob=0.2)

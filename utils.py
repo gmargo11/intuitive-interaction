@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def display_state(environment, agents):
+def display_map_state(environment, agents):
     state = environment.obstacle_map[:]
     print(state)
     for goal_location in environment.goal_locations:
@@ -10,4 +10,12 @@ def display_state(environment, agents):
 
     plt.figure()
     plt.imshow(state)
-    plt.show()
+    plt.title("Map")
+
+def display_belief_state(agent):
+    plt.figure()
+    num_rewards = len(agent.rewards)
+    for i in range(num_rewards):
+        plt.subplot(1, num_rewards, i+1)
+        plt.bar(range(len(agent.initial_beliefs[i, :])), agent.initial_beliefs[i, :])
+        plt.title("Initial Beliefs, Object %s" % i)
