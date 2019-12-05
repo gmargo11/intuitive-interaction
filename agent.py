@@ -9,10 +9,12 @@ class Agent:
         self.plan = Plan(initial_location=initial_location)
         self.knowledge = {}
 
-    def get_visible_goals(self, environment):
+    def get_visible_goals(self):
         # return dictionary of visible goals in agent's line of sight
         # goal: reward
 
-        
-
-        raise NotImplementedError
+        visible_goals = {}
+        for goal in self.environment.goal_locations:
+            if self.environment.is_visible(a.location[0], a.location[1], goal[0], goal[1]):
+                visible_goals[goal] = self.rewards[goal]
+        return visible_goals
