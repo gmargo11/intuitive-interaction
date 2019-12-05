@@ -1,11 +1,16 @@
 class Agent:
     def __init__(self, rewards: dict, initial_location: tuple, initial_beliefs: list, environment):
         self.rewards = rewards
-        self.visible_goals = {}
         self.location = initial_location
         self.initial_beliefs = initial_beliefs
         self.environment = environment
-        #self.location_at_each_time = []
-        #self.communication_at_each_time = []
-        #self.beliefs_at_each_time = []
-        #self.rewards_at_each_time = []
+        self.plan = Plan()
+        self.knowledge = {}
+
+    def get_visible_goals(self, environment):
+        # return dictionary of visible goals in agent's line of sight
+        # goal: reward
+
+        
+
+        raise NotImplementedError

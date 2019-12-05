@@ -28,7 +28,9 @@ if __name__ == "__main__":
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
     goal_locations = [(3, 12), (11, 12)]
-    env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations)
+    # if endpoint is (inf,inf), obstacle reaches boundary.
+    obstacle_endpoints = [((0,3), (float('inf'), float('inf')))]
+    env = Environment(obstacle_map=obstacle_map, obstacle_endpoints=obstacle_endpoints, goal_locations=goal_locations)
 
     # define agents
     agent1 = Agent(rewards={'A': 3, 'B': 10}, initial_location=(3, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)

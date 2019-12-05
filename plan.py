@@ -1,6 +1,5 @@
 class Plan:
-    def __init__(self, agent):
-        self.agent = agent
+    def __init__(self):
         self._duration = 0
         self._location_at_each_time = []
         self._communication_at_each_time = []
@@ -12,4 +11,5 @@ class Plan:
 
     def get_communication_at_time(self, time):
         return self._communication_at_each_time[time]
+        
 
