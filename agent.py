@@ -1,3 +1,5 @@
+from plan import Plan
+
 class Agent:
     def __init__(self, rewards: dict, initial_location: tuple, initial_beliefs: list, environment):
         self.rewards = rewards
