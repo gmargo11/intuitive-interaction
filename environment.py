@@ -6,7 +6,7 @@ class Environment:
         self.obstacle_endpoints = obstacle_endpoints
         self.goal_locations = goal_locations
 
-    def is_visible(self, ax, ay, bx, by):
+    def is_visible(self, ax, ay, bx, by): # returns True if there is an obstacle-free line of sight between (ax, ay) and (bx, by), false otherwise
         steps = max(abs(bx-ax), abs(by-ay)) - 1
         dx = (bx-ax)/steps
         dy = (by-ay)/steps

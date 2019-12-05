@@ -32,15 +32,18 @@ if __name__ == "__main__":
     obstacle_endpoints = [((0,3), (float('inf'), float('inf')))]
     env = Environment(obstacle_map=obstacle_map, obstacle_endpoints=obstacle_endpoints, goal_locations=goal_locations)
 
-    print(env.is_visible(3, 12, 11, 12))
-    print(env.is_visible(3, 12, 3, 7))
 
     # define agents
     agent1 = Agent(rewards={'A': 3, 'B': 10}, initial_location=(3, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
     agent2 = Agent(rewards={'A': 5, 'B': 8}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
-    display_map_state(environment=env, agents=[agent1, agent2])
-    display_belief_state(agent=agent1)
+    agent1.plan.set_next_location((4, 7))
+    agent2.plan.set_next_location((10, 7))
+
+    for t in range(agent1.plan.get_duration()):
+        display_map_state(environment=env, agents=[agent1, agent2], t=t)
+        display_belief_state(agent=agent1)
+
     plt.show()
 
     # generate plans
