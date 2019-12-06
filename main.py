@@ -7,6 +7,7 @@ from utils import display_map_state, display_belief_state, display_inferred_goal
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 
 
@@ -28,23 +29,12 @@ def two_goals_example():
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
     goal_locations = [(3, 12), (11, 12)]
-    goals = ['A','B','C','D','E']
-    goal_assignments = {(3,12): 'A', (11,12): 'B'}
-    env = Environment(obstacle_map=obstacle_map, obstacle_endpoints=obstacle_endpoints, goal_assignments=goal_assignments)
+    env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations)
 
 
     # define agents
     agent1 = Agent(rewards={'A': 3, 'B': 10}, initial_location=(3, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
     agent2 = Agent(rewards={'A': 5, 'B': 8}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
-
-    #agent1.plan.set_next_location((4, 7))
-    #agent2.plan.set_next_location((10, 7))
-
-    #for t in range(agent1.plan.get_duration()):
-    #    display_map_state(environment=env, agents=[agent1, agent2], t=t)
-    #    display_belief_state(agent=agent1)
-
-    #plt.show()
 
     # generate plans
     plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=30, cprob=0.2)
@@ -67,20 +57,23 @@ def three_goals_example():
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                            [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                            [1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                            [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+
     goal_locations = [(3, 12), (7, 12), (12, 12)]
     goals = ['A','B','C','D','E']
-    #goal_assignments = {(3,12): 'A', (7,12): 'B', (12,12):'C'}
     goal_assignments = {'A': goal_locations[0], 'B': goal_locations[1], 'C': goal_locations[2], 'D': None, 'E': None}
     env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations, goal_assignments=goal_assignments)
 
@@ -92,18 +85,14 @@ def three_goals_example():
     #agent1.plan.set_next_location((4, 7))
     #agent2.plan.set_next_location((10, 7))
 
-    #for t in range(agent1.plan.get_duration()):
-    #    display_map_state(environment=env, agents=[agent1, agent2], t=t)
-    #    display_belief_state(agent=agent1)
-
-    #plt.show()
-
     # generate plans
-    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=30, cprob=0.2)
+    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=30, cprob=0.0)
     for p in plan:
         print(plan[p]._location_at_each_time)
 
-    plt.figure()
+    fig = plt.figure()
+    maps = []
+    inferences = []
     for t in range(agent1.plan.get_duration()):
          #plt.figure()
          plt.cla()
@@ -112,11 +101,19 @@ def three_goals_example():
          plt.subplot(1, 2, 2)
          display_inferred_goals(infer_goal(agent1, t))
          plt.waitforbuttonpress()
-    plt.show()
+    
 
     # infer communication
     #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
-
+    # generate GIF
+    fig2 = plt.figure()
+    maps = []
+    for t in range(agent1.plan.get_duration()):
+         maps.append([display_map_state(environment=env, agents=[agent1, agent2], t=t)])
+    print(maps)
+    ani = animation.ArtistAnimation(fig2, maps, interval=200, blit=True,
+                                repeat_delay=1000)
+    ani.save('scenario2.gif', writer='pillow')
 
 
 if __name__ == "__main__":

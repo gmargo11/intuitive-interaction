@@ -11,8 +11,8 @@ def display_map_state(environment, agents, t=0, fig=0):
         loc = agent.plan.get_location_at_time(t)
         state[loc[0], loc[1]] = 3
 
-    plt.imshow(state)
     plt.title("Map")
+    return plt.imshow(state)
 
 def display_belief_state(agent):
     num_rewards = len(agent.rewards)
@@ -25,5 +25,5 @@ def display_inferred_goals(inferred_goals, fig=1):
     goals = list(inferred_goals.keys())
     probs = [inferred_goals[goal] for goal in goals]
     goals = [str(goal) for goal in goals]
-    plt.bar(goals, probs)
     plt.title("Inferred goals, Agent 1")
+    return plt.bar(goals, probs)
