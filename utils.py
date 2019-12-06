@@ -11,7 +11,6 @@ def display_map_state(environment, agents, t=0):
         loc = agent.plan.get_location_at_time(t)
         state[loc[0], loc[1]] = 3
 
-    plt.figure()
     plt.imshow(state)
     plt.title("Map")
 
