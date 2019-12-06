@@ -1,10 +1,17 @@
 from planning import next_optimal_step
 
-def infer_communication(environment, agents, plan):
-    # infer agent goals at the previous time and this time
+def infer_communication(environment, agents, plan, t):
+    communication_posterior = {}
+    for agent in agents:
+        # infer agent goals at the previous time and this time
+        prev_goal = infer_goal(agent, t-1)
+        cur_goal = infer_goal(agent, t)
 
-
-    # if an agent's goal changed, probability of communication is high.
+        # if an agent's goal changed, probability of communication is high.
+        if prev_goal != cur_goal:
+            communication_posterior[agent.name] = 0.9
+        else:
+            communication_posterior[agent.name] = 0.1
 
 
     # TODO a better extension: if the agent's goal changed in a way that could be caused by the other agent's knowledge, then probability of communication is high
@@ -28,13 +35,13 @@ def infer_goal(agent, t):
         if next_loc == cur_loc:
             rational_goals += [goal]
 
-    predictions = {}
+    goal_posterior = {}
     n_rational_goals = len(rational_goals)
     n_goals = len(agent.rewards.keys())
     for goal in agent.rewards.keys():
         if goal in rational_goals:
-            predictions[goal] = 0.9 / n_rational_goals + 0.1 / n_goals
+            goal_posterior[goal] = 0.9 / n_rational_goals + 0.1 / n_goals
         else:
-            predictions[goal] = 0.1 / n_goals
+            goal_posterior[goal] = 0.1 / n_goals
 
-    return predictions
+    return goal_posterior

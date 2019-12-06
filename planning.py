@@ -5,7 +5,7 @@ import heapq
 
 def create_plan(environment, agents, timesteps, cprob):
     
-    for t in range(timesteps):
+    for t in range(1, timesteps):
         for a in agents:
             plan = a.plan
     		# update agent's knowledge with what it can see
@@ -27,6 +27,8 @@ def create_plan(environment, agents, timesteps, cprob):
                 info_agent = agents[ind]
                 # acquire other agent's knowledge
                 a.knowledge.update(info_agent.knowledge)
+
+            plan.set_knowledge(t, a.knowledge)
 
             # make optimal step given information    
             if a.rewards[max_goal] > avg_other_goals:
@@ -68,7 +70,7 @@ def create_plan(environment, agents, timesteps, cprob):
         #                    new_location = ln
 
             a.location = new_location
-            plan.set_next_location(new_location)
+            plan.set_location(t, new_location)
 
     agent_plans = {}
     for i in range(len(agents)):
