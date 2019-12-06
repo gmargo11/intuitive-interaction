@@ -15,6 +15,6 @@ class Agent:
 
         visible_goals = {}
         for goal in self.environment.goal_locations:
-            if self.environment.is_visible(a.location[0], a.location[1], goal[0], goal[1]):
+            if self.environment.is_visible(self.location[0], self.location[1], goal[0], goal[1]):
                 visible_goals[goal] = self.rewards[goal]
         return visible_goals

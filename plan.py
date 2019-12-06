@@ -2,7 +2,7 @@ class Plan:
     def __init__(self, initial_location):
         self._duration = 1
         self._location_at_each_time = [initial_location]
-        self._communication_at_each_time = []
+        self._communication_at_each_time = [False]
         self._beliefs_at_each_time = []
         self._rewards_at_each_time = []
 

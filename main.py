@@ -1,7 +1,7 @@
 from environment import Environment
 from agent import Agent
 from plan import Plan
-#from planning import create_plan
+from planning import create_plan
 #from inference import infer_communication
 from utils import display_map_state, display_belief_state
 
@@ -29,25 +29,32 @@ if __name__ == "__main__":
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
     goal_locations = [(3, 12), (11, 12)]
     # if endpoint is (inf,inf), obstacle reaches boundary.
-    obstacle_endpoints = [((0,3), (float('inf'), float('inf')))]
+    # endpoints are 0 spaces that are diagonal to end of obstacles
+    obstacle_endpoints = [((7,2), (float('inf'), float('inf')))]
     env = Environment(obstacle_map=obstacle_map, obstacle_endpoints=obstacle_endpoints, goal_locations=goal_locations)
 
 
     # define agents
-    agent1 = Agent(rewards={'A': 3, 'B': 10}, initial_location=(3, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
-    agent2 = Agent(rewards={'A': 5, 'B': 8}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent1 = Agent(rewards={goal_locations[0]: 3, goal_locations[1]: 10}, initial_location=(3, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent2 = Agent(rewards={goal_locations[0]: 5, goal_locations[1]: 8}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
-    agent1.plan.set_next_location((4, 7))
-    agent2.plan.set_next_location((10, 7))
+    #agent1.plan.set_next_location((4, 7))
+    #agent2.plan.set_next_location((10, 7))
 
-    for t in range(agent1.plan.get_duration()):
-        display_map_state(environment=env, agents=[agent1, agent2], t=t)
-        display_belief_state(agent=agent1)
+    #for t in range(agent1.plan.get_duration()):
+    #    display_map_state(environment=env, agents=[agent1, agent2], t=t)
+    #    display_belief_state(agent=agent1)
 
-    plt.show()
+    #plt.show()
 
     # generate plans
-    #plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=20, cprob=0.2)
+    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=8, cprob=0.2)
+    for p in plan:
+        print(plan[p]._location_at_each_time)
+
+    for t in range(8):
+         display_map_state(environment=env, agents=[agent1, agent2], t=t)
+    plt.show()
 
     # infer communication
     #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
