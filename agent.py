@@ -16,7 +16,9 @@ class Agent:
         if loc==None: loc = self.location
 
         visible_goals = {}
-        for goal in self.environment.goal_locations:
-            if self.environment.is_visible(loc[0], loc[1], goal[0], goal[1]):
+
+        for goal in self.environment.goal_assignments:
+            goal_loc = self.environment.goal_assignments[goal]
+            if goal_loc != None and self.environment.is_visible(self.location[0], self.location[1], goal_loc[0], goal_loc[1]):
                 visible_goals[goal] = self.rewards[goal]
         return visible_goals

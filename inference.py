@@ -36,10 +36,11 @@ def infer_goal(agent, t):
     # inverse planning: get actions agent would have taken on the last timestep given different goals
     rational_goals = []
     for goal in agent.rewards.keys():
-        next_loc, dist = next_optimal_step(prev_loc, goal, agent.environment.obstacle_map)
-        print(next_loc, cur_loc)
-        if next_loc == cur_loc:
-            rational_goals += [goal]
+        goal_loc = agent.environment.goal_assignments[goal]
+        if goal_loc != None:
+            next_loc, dist = next_optimal_step(prev_loc, goal_loc, agent.environment.obstacle_map)
+            if next_loc == cur_loc:
+                rational_goals += [goal]
 
     goal_posterior = {}
     n_rational_goals = len(rational_goals)
