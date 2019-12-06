@@ -5,13 +5,19 @@ import heapq
 
 def create_plan(environment, agents, timesteps, cprob):
     
+    print(environment.goal_assignments)
     for t in range(1, timesteps):
+        print(agents)
         for a in agents:
+            print(a)
+            print(a.location)
             plan = a.plan
     		# update agent's knowledge with what it can sees
             a.knowledge.update(a.get_visible_goals())
     		# out of goals in agent's line of sight, pick goal X with highest reward
+            print(a.knowledge)
             max_goal = max(a.knowledge, key=a.knowledge.get)
+            print(max_goal)
             if len(a.rewards.items()) != len(a.knowledge.keys()):
                 avg_other_goals = mean((value for key, value in a.rewards.items() if key not in a.knowledge.keys()))
             else:
@@ -37,12 +43,15 @@ def create_plan(environment, agents, timesteps, cprob):
                 new_location, dist = next_optimal_step(a.location, goal_loc, environment.obstacle_map)
             else:
                 # move toward nearest unobserved goal
+                #print("move toward unobserved goal")
                 min_dist = float('inf')
                 new_location = a.location
                 for key in a.rewards.keys() - a.knowledge.keys():
                     next_loc = environment.goal_assignments[key]
+                    #print("next loc:", next_loc)
                     if next_loc != None:
                         ln, dist = next_optimal_step(a.location, next_loc, environment.obstacle_map)
+                        #print(ln, dist)
                         if dist < min_dist:
                             min_dist = dist
                             new_location = ln
@@ -72,6 +81,7 @@ def create_plan(environment, agents, timesteps, cprob):
         #                    min_dist = dist
         #                    new_location = ln
 
+            print(new_location)
             a.location = new_location
             plan.set_location(t, new_location)
 

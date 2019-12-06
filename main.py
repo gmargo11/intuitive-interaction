@@ -72,15 +72,15 @@ def three_goals_example():
                             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
 
-    goal_locations = [(3, 12), (7, 12), (12, 12)]
+    goal_locations = [(3, 9), (9, 12), (15, 12)]
     goals = ['A','B','C','D','E']
     goal_assignments = {'A': goal_locations[0], 'B': goal_locations[1], 'C': goal_locations[2], 'D': None, 'E': None}
     env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations, goal_assignments=goal_assignments)
 
 
     # define agents
-    agent1 = Agent(rewards={'A': 3, 'B': 5, 'C': 10, 'D': 5, 'E': 5}, initial_location=(7, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
-    agent2 = Agent(rewards={'A': 5, 'B': 8, 'C': 7, 'D': 5, 'E': 5}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent1 = Agent(name='Agent 1', rewards={'A': 3, 'B': 5, 'C': 10, 'D': 5, 'E': 5}, initial_location=(7, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent2 = Agent(name='Agent 2', rewards={'A': 5, 'B': 8, 'C': 7, 'D': 5, 'E': 5}, initial_location=(11, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
     #agent1.plan.set_next_location((4, 7))
     #agent2.plan.set_next_location((10, 7))
@@ -94,7 +94,7 @@ def three_goals_example():
     maps = []
     inferences = []
     for t in range(agent1.plan.get_duration()):
-         #plt.figure()
+         #lt.figure()
          plt.cla()
          plt.subplot(1, 2, 1)
          display_map_state(environment=env, agents=[agent1, agent2], t=t)
