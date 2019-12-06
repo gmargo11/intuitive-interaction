@@ -1,13 +1,16 @@
 from planning import next_optimal_step
 
 def infer_communication(environment, agents, plan):
-    history = []
-    goal = []
-    for t in range(plan._duration):
-        location = plan.get_location_at_time(t)
-        loc_history += [location]
-        goal = infer_goal(loc_history)
-        goal_history += [goal]
+    # infer agent goals at the previous time and this time
+
+
+    # if an agent's goal changed, probability of communication is high.
+
+
+    # TODO a better extension: if the agent's goal changed in a way that could be caused by the other agent's knowledge, then probability of communication is high
+    # give agent some probability of randomly changing its goal or taking a random step regardless of communication
+    # then, in a setting with many goals the probability of communication can depend on the action/new inferred goal.
+    raise NotImplementedError
 
 
 def infer_goal(agent, t):
