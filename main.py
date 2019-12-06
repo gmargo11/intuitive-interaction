@@ -2,8 +2,8 @@ from environment import Environment
 from agent import Agent
 from plan import Plan
 from planning import create_plan
-#from inference import infer_communication
-from utils import display_map_state, display_belief_state
+from inference import infer_communication, infer_goal
+from utils import display_map_state, display_belief_state, display_inferred_goals
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -105,7 +105,11 @@ def three_goals_example():
 
     plt.figure()
     for t in range(agent1.plan.get_duration()):
+         plt.cla()
+         plt.subplot(1, 2, 1)
          display_map_state(environment=env, agents=[agent1, agent2], t=t)
+         plt.subplot(1, 2, 2)
+         display_inferred_goals(infer_goal(agent1, t))
          plt.waitforbuttonpress()
     plt.show()
 
