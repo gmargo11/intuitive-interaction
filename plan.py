@@ -8,11 +8,14 @@ class Plan:
     def set_location(self, t, loc):
         self._location_at_each_time[t] = loc
 
+    def get_location_at_time(self, t):
+        return self._location_at_each_time[t]
+
     def set_knowledge(self, t, knowledge):
         self._knowledge_at_each_time[t] = knowledge
 
-    def get_location_at_time(self, time):
-        return self._location_at_each_time[time]
+    def get_knowledge_at_time(self, t):
+        return self._knowledge_at_each_time[t]
 
     def get_communication_at_time(self, time):
         return self._communication_at_each_time[time]

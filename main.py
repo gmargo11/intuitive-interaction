@@ -86,7 +86,7 @@ def three_goals_example():
     #agent2.plan.set_next_location((10, 7))
 
     # generate plans
-    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=30, cprob=0.0)
+    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=30, cprob=0.2)
     for p in plan:
         print(plan[p]._location_at_each_time)
 
@@ -100,6 +100,7 @@ def three_goals_example():
          display_map_state(environment=env, agents=[agent1, agent2], t=t)
          plt.subplot(1, 2, 2)
          display_inferred_goals(infer_goal(agent1, t))
+         print(infer_communication(agents=[agent1, agent2], t=t))
          plt.waitforbuttonpress()
     
 
