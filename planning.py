@@ -8,7 +8,7 @@ def create_plan(environment, agents, timesteps, cprob):
     for t in range(timesteps):
         for a in agents:
             plan = a.plan
-    		# update agent's knowledge with what it can see
+    		# update agent's knowledge with what it can sees
             a.knowledge.update(a.get_visible_goals())
     		# out of goals in agent's line of sight, pick goal X with highest reward
             max_goal = max(a.knowledge, key=a.knowledge.get)
@@ -18,8 +18,8 @@ def create_plan(environment, agents, timesteps, cprob):
                 # all goals have already been observed!
                 avg_other_goals = -float('inf')
     		# randomly choose to communicate or not with some probability
-            communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
-            #communicate = np.random.choice([True,False],p=[0, 1])
+            #communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
+            communicate = np.random.choice([True,False],p=[0, 1])
             plan._communication_at_each_time.append(communicate)
             if communicate: 
                 # determine which agent to communicate with
@@ -28,19 +28,22 @@ def create_plan(environment, agents, timesteps, cprob):
                 # acquire other agent's knowledge
                 a.knowledge.update(info_agent.knowledge)
 
-            # make optimal step given information    
+            # make optimal step given information
             if a.rewards[max_goal] > avg_other_goals:
                 # move toward max goal
-                new_location, dist = next_optimal_step(a.location, max_goal, environment.obstacle_map)
+                goal_loc = environment.goal_assignments[max_goal]
+                new_location, dist = next_optimal_step(a.location, goal_loc, environment.obstacle_map)
             else:
                 # move toward nearest unobserved goal
                 min_dist = float('inf')
                 new_location = a.location
                 for key in a.rewards.keys() - a.knowledge.keys():
-                    ln, dist = next_optimal_step(a.location, key, environment.obstacle_map)
-                    if dist < min_dist:
-                        min_dist = dist
-                        new_location = ln
+                    next_loc = environment.goal_assignments[key]
+                    if next_loc != None:
+                        ln, dist = next_optimal_step(a.location, next_loc, environment.obstacle_map)
+                        if dist < min_dist:
+                            min_dist = dist
+                            new_location = ln
 
            # if communicate:
            #     #print('comm')
