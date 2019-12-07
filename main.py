@@ -78,12 +78,11 @@ def three_goals_example():
     env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations, goal_assignments=goal_assignments)
 
 
-    # define agents
+
     agent1 = Agent(name="Agent1", rewards={'A': 3, 'B': 5, 'C': 10, 'D': 5, 'E': 5}, initial_location=(9, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
     agent2 = Agent(name="Agent2", rewards={'A': 5, 'B': 8, 'C': 7, 'D': 5, 'E': 5}, initial_location=(15, 7), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
-    #agent1.plan.set_next_location((4, 7))
-    #agent2.plan.set_next_location((10, 7))
+
 
     # generate plans
     plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=30, cprob=0.2)
@@ -94,7 +93,6 @@ def three_goals_example():
     maps = []
     inferences = []
     for t in range(agent1.plan.get_duration()):
-         #plt.figure()
          plt.cla()
          plt.subplot(1, 2, 1)
          display_map_state(environment=env, agents=[agent1, agent2], t=t)
