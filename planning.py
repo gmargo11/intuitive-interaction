@@ -18,8 +18,8 @@ def create_plan(environment, agents, timesteps, cprob):
                 # all goals have already been observed!
                 avg_other_goals = -float('inf')
     		# randomly choose to communicate or not with some probability
-            #communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
-            communicate = np.random.choice([True,False],p=[0, 1])
+            communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
+            #communicate = np.random.choice([True,False],p=[0, 1])
             plan._communication_at_each_time.append(communicate)
             if communicate: 
                 # determine which agent to communicate with
