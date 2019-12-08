@@ -2,20 +2,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 def display_map_state(environment, agents, t=0, fig=0):
-    state = np.array(environment.obstacle_map)
+    state = (1-np.array(environment.obstacle_map)) * 90 + np.array(environment.obstacle_map) * 0
     print(state)
     for goal_location in environment.goal_locations:
-        state[goal_location[0], goal_location[1]] = 2
+        state[goal_location[0], goal_location[1]] = 205
     for agent in agents:
         #state[agent.location[0], agent.location[1]] = 3
-        loc = agent.plan.get_location_at_time(t)
-        state[loc[0], loc[1]] = 3
         for ti in range(t):
             loc = agent.plan.get_location_at_time(ti)
-            state[loc[0], loc[1]] = 2.8
+            state[loc[0], loc[1]] = 235
+        loc = agent.plan.get_location_at_time(t)
+        state[loc[0], loc[1]] = 255
 
     plt.title("Map")
-    return plt.imshow(state, cmap='rainbow')
+    return plt.imshow(state, cmap='Spectral')
 
 def display_belief_state(agent):
     num_rewards = len(agent.rewards)
