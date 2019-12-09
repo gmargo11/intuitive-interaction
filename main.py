@@ -79,13 +79,13 @@ def three_goals_example():
 
 
 
-    agent1 = Agent(name="Agent1", rewards={'A': 3, 'B': 5, 'C': 10, 'D': 5, 'E': 5}, initial_location=(9, 10), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
-    agent2 = Agent(name="Agent2", rewards={'A': 5, 'B': 8, 'C': 7, 'D': 3, 'E': 5}, initial_location=(15, 10), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent1 = Agent(name="A1", rewards={'A': 3, 'B': 5, 'C': 10, 'D': 5, 'E': 5}, initial_location=(9, 10), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
+    agent2 = Agent(name="A2", rewards={'A': 5, 'B': 8, 'C': 7, 'D': 3, 'E': 5}, initial_location=(15, 10), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
 
 
     # generate plans
-    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.2)
+    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=6)
     for p in plan:
         print(plan[p]._location_at_each_time)
 
@@ -94,11 +94,15 @@ def three_goals_example():
     inferences = []
     for t in range(agent1.plan.get_duration()):
          plt.cla()
-         plt.subplot(1, 2, 1)
+         ax = plt.subplot(1, 2, 1)
+         plt.cla()
          display_map_state(environment=env, agents=[agent1, agent2], t=t)
-         plt.subplot(1, 2, 2)
-         display_inferred_goals(infer_goal(agent1, t))
-         print(infer_communication(agents=[agent1, agent2], t=t))
+         ax.axis('off')
+         ax = plt.subplot(1, 2, 2)
+         plt.cla()
+         ax.axis('off')
+         #display_inferred_goals(infer_goal(agent1, t))
+         #print(infer_communication(agents=[agent1, agent2], t=t))
          plt.waitforbuttonpress()
     
 

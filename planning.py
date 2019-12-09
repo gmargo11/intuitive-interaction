@@ -3,7 +3,7 @@ from statistics import mean
 import math
 import heapq
 
-def create_plan(environment, agents, timesteps, cprob):
+def create_plan(environment, agents, timesteps, cprob=0.0, ctime=-1):
     
     for t in range(1, timesteps):
         for a in agents:
@@ -21,14 +21,13 @@ def create_plan(environment, agents, timesteps, cprob):
             communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
             #communicate = np.random.choice([True,False],p=[0, 1])
             plan._communication_at_each_time.append(communicate)
-            if communicate: 
+            if communicate or t==ctime: 
                 # determine which agent to communicate with
                 ind = np.random.randint(0, len(agents))
                 info_agent = agents[ind]
                 # acquire other agent's knowledge
                 a.knowledge.update(info_agent.knowledge)
 
-            plan.set_knowledge(t, a.knowledge)
 
             # make optimal step given information  
             if a.rewards[max_goal] > avg_other_goals:
@@ -46,9 +45,11 @@ def create_plan(environment, agents, timesteps, cprob):
                         if dist < min_dist:
                             min_dist = dist
                             new_location = ln
-
-            a.location = new_location
-            plan.set_location(t, new_location)
+            
+            if dist > 0:
+                a.location = new_location
+                plan.set_location(t, a.location)
+                plan.set_knowledge(t, a.knowledge)
 
     agent_plans = {}
     for i in range(len(agents)):

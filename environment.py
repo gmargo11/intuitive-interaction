@@ -5,6 +5,10 @@ class Environment:
         self.obstacle_map = obstacle_map
         self.goal_locations = goal_locations
         self.goal_assignments = goal_assignments
+        
+        self.goal_assignments_inv = {}
+        for goal in goal_assignments.keys():
+            self.goal_assignments_inv[goal_assignments[goal]] = goal
 
     def is_visible(self, ax, ay, bx, by): # returns True if there is an obstacle-free line of sight between (ax, ay) and (bx, by), false otherwise
         steps = max(abs(bx-ax), abs(by-ay)) - 1
