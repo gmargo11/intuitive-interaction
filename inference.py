@@ -39,27 +39,41 @@ def infer_goal(agent, t):
     cur_loc = agent.plan.get_location_at_time(t)
 
     # inverse planning: get actions agent would have taken on the last timestep given different goals
-    rational_goals = []
-    n_goals = 0
-    for goal in agent.rewards.keys():
-        goal_loc = agent.environment.goal_assignments[goal]
-        if goal_loc != None:
-            n_goals += 1
-            next_loc, dist = next_optimal_step(prev_loc, goal_loc, agent.environment.obstacle_map)
-            if next_loc == cur_loc:
-                rational_goals += [goal]
+    # rational_goals = []
+    # n_goals = 0
+    # for goal in agent.rewards.keys():
+    #     goal_loc = agent.environment.goal_assignments[goal]
+    #     if goal_loc != None:
+    #         n_goals += 1
+    #         next_loc, dist = next_optimal_step(prev_loc, goal_loc, agent.environment.obstacle_map)
+    #         if next_loc == cur_loc:
+    #             rational_goals += [goal]
 
+    rational_goals = []
+    for goal_loc in agent.environment.goal_locations:
+        next_loc, dist = next_optimal_step(prev_loc, goal_loc, agent.environment.obstacle_map)
+        if next_loc == cur_loc:
+            rational_goals += [goal_loc]
+
+    # goal_posterior = {}
+    # n_rational_goals = len(rational_goals)
+    # # n_goals = len(agent.rewards.keys())
+    # for goal in agent.rewards.keys():
+    #     if goal in rational_goals:
+    #         goal_posterior[goal] = 0.9 / n_rational_goals + 0.1 / n_goals
+    #     else:
+    #         goal_loc = agent.environment.goal_assignments[goal]
+    #         if goal_loc != None:
+    #             goal_posterior[goal] = 0.1 / n_goals
+    #         else:
+    #             goal_posterior[goal] = 0
     goal_posterior = {}
     n_rational_goals = len(rational_goals)
-    # n_goals = len(agent.rewards.keys())
-    for goal in agent.rewards.keys():
-        if goal in rational_goals:
-            goal_posterior[goal] = 0.9 / n_rational_goals + 0.1 / n_goals
+    n_goals = len(agent.environment.goal_locations)
+    for goal_loc in agent.environment.goal_locations:
+        if goal_loc in rational_goals:
+            goal_posterior[goal_loc] = 0.9 / n_rational_goals + 0.1 / n_goals
         else:
-            goal_loc = agent.environment.goal_assignments[goal]
-            if goal_loc != None:
-                goal_posterior[goal] = 0.1 / n_goals
-            else:
-                goal_posterior[goal] = 0
+            goal_posterior[goal_loc] = 0.1 / n_goals
 
     return goal_posterior

@@ -93,29 +93,43 @@ def three_goals_example():
     maps = []
     inferences = []
     communication = []
-    probs = {'A':[],'B':[],'C':[],'D':[],'E':[]}
+    probs = {}
+    for goal_loc in env.goal_locations:
+        probs[goal_loc] = []
     for t in range(agent1.plan.get_duration()):
-        c = infer_communication(agents=[agent1,agent2],t=t)
-        if 'A1' in c:
+         c = infer_communication(agents=[agent1,agent2],t=t)
+         if 'A1' in c:
             communication.append(c['A1'])
-        g = infer_goal(agent1, t)
-        for goal in g:
+         g = infer_goal(agent1, t)
+         for goal in g:
             probs[goal].append(g[goal])
-         # fig = plt.figure()
-         # plt.cla()
-         # ax = plt.subplot(1, 2, 1)
-         # plt.cla()
-         # display_map_state(environment=env, agents=[agent1, agent2], t=t)
-         # ax.axis('off')
-         # ax = plt.subplot(1, 2, 2)
-         # plt.cla()
-         # ax.axis('off')
-         # display_inferred_goals(infer_goal(agent1, t))
-         # print(infer_communication(agents=[agent1, agent2], t=t))
-         # plt.waitforbuttonpress()
-    
-    print(communication)
-    print(probs)
+         fig = plt.figure()
+         plt.cla()
+         ax = plt.subplot(1, 2, 1)
+         plt.cla()
+         display_map_state(environment=env, agents=[agent1, agent2], t=t)
+         ax.axis('off')
+         ax = plt.subplot(1, 2, 2)
+         plt.cla()
+         ax.axis('off')
+         display_inferred_goals(infer_goal(agent1, t))
+         print(infer_communication(agents=[agent1, agent2], t=t))
+         plt.waitforbuttonpress()
+
+
+    # plot probabilities
+    timesteps = [i for i in range(33)]
+    plt.plot(timesteps, probs[(3, 12)],marker='',linewidth=2, linestyle=':',label='A')
+    plt.plot(timesteps, probs[(9, 14)],marker='',linewidth=2, linestyle='-',label='B')
+    plt.plot(timesteps, probs[(15, 14)],marker='',linewidth=2, linestyle='--',label='C')
+    plt.plot(timesteps, probs[(3, 2)],marker='',linewidth=2, linestyle='-.',label='D')
+    plt.xlabel('Timestep')
+    plt.ylabel('Probability')
+    plt.title('Probability of Each Goal Location')
+    plt.legend()
+    plt.show()
+
+
     # infer communication
     #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
     # generate GIF
