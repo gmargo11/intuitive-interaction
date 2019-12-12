@@ -86,37 +86,47 @@ def three_goals_example():
 
     # generate plans
     plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=6)
-    for p in plan:
-        print(plan[p]._location_at_each_time)
+    # for p in plan:
+    #     print(plan[p]._location_at_each_time)
 
-    fig = plt.figure()
+    # fig = plt.figure()
     maps = []
     inferences = []
+    communication = []
+    probs = {'A':[],'B':[],'C':[],'D':[],'E':[]}
     for t in range(agent1.plan.get_duration()):
-         plt.cla()
-         ax = plt.subplot(1, 2, 1)
-         plt.cla()
-         display_map_state(environment=env, agents=[agent1, agent2], t=t)
-         ax.axis('off')
-         ax = plt.subplot(1, 2, 2)
-         plt.cla()
-         ax.axis('off')
-         #display_inferred_goals(infer_goal(agent1, t))
-         #print(infer_communication(agents=[agent1, agent2], t=t))
-         plt.waitforbuttonpress()
+        c = infer_communication(agents=[agent1,agent2],t=t)
+        if 'A1' in c:
+            communication.append(c['A1'])
+        g = infer_goal(agent1, t)
+        for goal in g:
+            probs[goal].append(g[goal])
+         # fig = plt.figure()
+         # plt.cla()
+         # ax = plt.subplot(1, 2, 1)
+         # plt.cla()
+         # display_map_state(environment=env, agents=[agent1, agent2], t=t)
+         # ax.axis('off')
+         # ax = plt.subplot(1, 2, 2)
+         # plt.cla()
+         # ax.axis('off')
+         # display_inferred_goals(infer_goal(agent1, t))
+         # print(infer_communication(agents=[agent1, agent2], t=t))
+         # plt.waitforbuttonpress()
     
-
+    print(communication)
+    print(probs)
     # infer communication
     #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
     # generate GIF
-    fig2 = plt.figure()
-    maps = []
-    for t in range(agent1.plan.get_duration()):
-         maps.append([display_map_state(environment=env, agents=[agent1, agent2], t=t)])
-    print(maps)
-    ani = animation.ArtistAnimation(fig2, maps, interval=200, blit=True,
-                                repeat_delay=1000)
-    ani.save('scenario2.gif', writer='pillow')
+    # fig2 = plt.figure()
+    # maps = []
+    # for t in range(agent1.plan.get_duration()):
+    #      maps.append([display_map_state(environment=env, agents=[agent1, agent2], t=t)])
+    # print(maps)
+    # ani = animation.ArtistAnimation(fig2, maps, interval=200, blit=True,
+    #                             repeat_delay=1000)
+    # ani.save('scenario2.gif', writer='pillow')
 
 
 if __name__ == "__main__":
