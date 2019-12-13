@@ -6,16 +6,16 @@ def infer_communication(agents, t):
     communication_posterior = {}
     for agent in agents:
         # infer agent goals at the previous time and this time
-        prev_goal = infer_goal(agent, t-1)
-        cur_goal = infer_goal(agent, t)
-        #print("prev goal:", prev_goal, "cur_goal", cur_goal)
+        prev_goals = infer_goal(agent, t-1)
+        cur_goals = infer_goal(agent, t)
+        prev_goal = max(prev_goals, key=prev_goals.get)
+        cur_goal = max(cur_goals, key=cur_goals.get)
 
         # if an agent's goal changed and visible goals did not change, probability of communication is high.
-        prev_visible = agent.get_visible_goals(loc=agent.plan.get_location_at_time(t-2))
-        cur_visible = agent.get_visible_goals(loc=agent.plan.get_location_at_time(t-1))
+        prev_knowledge = agent.plan.get_knowledge_at_time(t-1)
+        cur_knowledge = agent.plan.get_knowledge_at_time(t)
 
-        if prev_goal != cur_goal and prev_visible == cur_visible:
-            #print(prev_visible, cur_visible)
+        if prev_goal != cur_goal and prev_knowledge == cur_knowledge:
             communication_posterior[agent.name] = 0.9
         else:
             communication_posterior[agent.name] = 0.1

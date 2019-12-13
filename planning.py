@@ -49,7 +49,8 @@ def create_plan(environment, agents, timesteps, cprob=0.0, ctime=-1):
             if dist > 0:
                 a.location = new_location
                 plan.set_location(t, a.location)
-                plan.set_knowledge(t, a.knowledge)
+                plan.set_knowledge(t, a.knowledge.copy())
+
 
     agent_plans = {}
     for i in range(len(agents)):
