@@ -1,9 +1,15 @@
-from planning import next_optimal_step
+from planning import next_optimal_step, next_step_given_beliefs_rewards
+from agent import Agent
 
-def infer_communication(agents, t):
+def infer_communication(agents, environment, t):
     if t < 2:
         return {} # cannot infer communication before actions are taken
     communication_posterior = {}
+
+    total_knowledge = {}
+    for agent in agents:
+        total_knowledge.update(agent.plan.get_knowledge_at_time(t-1))
+
     for agent in agents:
         # infer agent goals at the previous time and this time
         prev_goals = infer_goal(agent, t-1)
@@ -12,12 +18,30 @@ def infer_communication(agents, t):
         cur_goal = max(cur_goals, key=cur_goals.get)
 
         # if an agent's goal changed and visible goals did not change, probability of communication is high.
+        prev2_knowledge = agent.plan.get_knowledge_at_time(t-2)
+        prev2_loc = agent.plan.get_location_at_time(t-2)
         prev_knowledge = agent.plan.get_knowledge_at_time(t-1)
-        cur_knowledge = agent.plan.get_knowledge_at_time(t)
+        prev_loc = agent.plan.get_location_at_time(t-1)
+        prev_beliefs_given_no_comm = {**agent.get_visible_goals(loc=prev_loc), **prev2_knowledge}
+        prev_beliefs_given_comm = {**prev_beliefs_given_no_comm, **total_knowledge}
 
-        if prev_goal != cur_goal and prev_knowledge == cur_knowledge:
-            communication_posterior[agent.name] = 0.9
-        else:
+        cur_loc_given_no_comm, dist = next_step_given_beliefs_rewards(prev_loc, prev_beliefs_given_no_comm, agent.rewards, environment)
+        cur_loc_given_comm, dist = next_step_given_beliefs_rewards(prev_loc, prev_beliefs_given_comm, agent.rewards, environment)
+
+        #no_comm_agent = Agent(name='no_comm',  )
+
+        #print(prev_goal, cur_goal, prev_knowledge, cur_knowledge)
+
+        cur_loc = agent.plan.get_location_at_time(t)
+
+        print(prev_beliefs_given_comm, prev_beliefs_given_no_comm, t)
+
+        if cur_loc_given_comm == cur_loc:
+            if cur_loc_given_comm == cur_loc_given_no_comm: # communication would not change agent's behavior
+                communication_posterior[agent.name] = 0.5
+            else: # strong evidence for communication over no-comm
+                communication_posterior[agent.name] = 0.9
+        else: # strong evidence for no-comm
             communication_posterior[agent.name] = 0.1
 
 

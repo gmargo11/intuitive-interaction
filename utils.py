@@ -3,11 +3,11 @@ import numpy as np
 
 def display_map_state(environment, agents, t=0, fig=0):
     state = (1-np.array(environment.obstacle_map)) * 90 + np.array(environment.obstacle_map) * 0
-    print(state)
+    #print(state)
     for goal_location in environment.goal_locations:
         state[goal_location[0], goal_location[1]] = 205
     for agent in agents:
-        print(agent.plan._location_at_each_time)
+        #print(agent.plan._location_at_each_time)
         #state[agent.location[0], agent.location[1]] = 3
         for ti in range(t):
             loc = agent.plan.get_location_at_time(ti)

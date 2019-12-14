@@ -85,11 +85,13 @@ def three_goals_example():
 
 
     # generate plans
-    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=6)
+    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=-1)
     # for p in plan:
     #     print(plan[p]._location_at_each_time)
 
-    # fig = plt.figure()
+    fig = plt.figure()
+    vis_map_state = True
+
     maps = []
     inferences = []
     communication = []
@@ -97,24 +99,25 @@ def three_goals_example():
     for goal_loc in env.goal_locations:
         probs[goal_loc] = []
     for t in range(agent1.plan.get_duration()):
-         c = infer_communication(agents=[agent1,agent2],t=t)
-         if 'A1' in c:
-            communication.append(c['A1'])
-         g = infer_goal(agent1, t)
-         for goal in g:
-            probs[goal].append(g[goal])
-    #      fig = plt.figure()
-    #      plt.cla()
-    #      ax = plt.subplot(1, 2, 1)
-    #      plt.cla()
-    #      display_map_state(environment=env, agents=[agent1, agent2], t=t)
-    #      ax.axis('off')
+        #c = infer_communication(agents=[agent1,agent2], environment=env,t=t)
+        #if 'A1' in c:
+        #   communication.append(c['A1'])
+        # g = infer_goal(agent1, t)
+        # for goal in g:
+        #    probs[goal].append(g[goal])
+    #       fig = plt.figure()
+        if vis_map_state:
+           plt.cla()
+           ax = plt.subplot(1, 2, 1)
+           plt.cla()
+           display_map_state(environment=env, agents=[agent1, agent2], t=t)
+           ax.axis('off')
     #      ax = plt.subplot(1, 2, 2)
     #      plt.cla()
     #      ax.axis('off')
     #      display_inferred_goals(infer_goal(agent1, t))
-    #      print(infer_communication(agents=[agent1, agent2], t=t))
-    #      plt.waitforbuttonpress()
+           print(infer_communication(agents=[agent1, agent2], environment=env, t=t))
+           plt.waitforbuttonpress()
     print(len(communication))
     print(communication)
 

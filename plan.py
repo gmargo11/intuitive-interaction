@@ -1,9 +1,9 @@
 class Plan:
-    def __init__(self, initial_location):
+    def __init__(self, initial_location, initial_knowledge):
         self._location_at_each_time = {0:initial_location}
         self._communication_at_each_time = [False]
-        self._knowledge_at_each_time = {}
-        self._rewards_at_each_time = {}
+        self._knowledge_at_each_time = {0:initial_knowledge}
+        #self._rewards_at_each_time = {}
 
     def set_location(self, t, loc):
         self._location_at_each_time[t] = loc

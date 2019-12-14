@@ -6,45 +6,22 @@ import heapq
 def create_plan(environment, agents, timesteps, cprob=0.0, ctime=-1):
     
     for t in range(1, timesteps):
-        for a in agents:
+        for ai in range(len(agents)):
+            a = agents[ai]
             plan = a.plan
     		# update agent's knowledge with what it can sees
             a.knowledge.update(a.get_visible_goals())
-    		# out of goals in agent's line of sight, pick goal X with highest reward
-            max_goal = max(a.knowledge, key=a.knowledge.get)
-            if len(a.rewards.items()) != len(a.knowledge.keys()):
-                avg_other_goals = mean((value for key, value in a.rewards.items() if key not in a.knowledge.keys()))
-            else:
-                # all goals have already been observed!
-                avg_other_goals = -float('inf')
     		# randomly choose to communicate or not with some probability
             communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
             #communicate = np.random.choice([True,False],p=[0, 1])
             plan._communication_at_each_time.append(communicate)
             if communicate or t==ctime: 
                 # determine which agent to communicate with
-                ind = np.random.randint(0, len(agents))
-                info_agent = agents[ind]
+                info_agent = np.random.choice(agents[:ai] + agents[ai+1:])
                 # acquire other agent's knowledge
                 a.knowledge.update(info_agent.knowledge)
 
-
-            # make optimal step given information  
-            if a.rewards[max_goal] > avg_other_goals:
-                # move toward max goal
-                goal_loc = environment.goal_assignments[max_goal]
-                new_location, dist = next_optimal_step(a.location, goal_loc, environment.obstacle_map)
-            else:
-                # move toward nearest unobserved goal
-                min_dist = float('inf')
-                new_location = a.location
-                for key in a.rewards.keys() - a.knowledge.keys():
-                    next_loc = environment.goal_assignments[key]
-                    if next_loc != None:
-                        ln, dist = next_optimal_step(a.location, next_loc, environment.obstacle_map)
-                        if dist < min_dist:
-                            min_dist = dist
-                            new_location = ln
+            new_location, dist = next_step_given_beliefs_rewards(a.location, a.knowledge, a.rewards, environment)
             
             if dist > 0:
                 a.location = new_location
@@ -57,6 +34,35 @@ def create_plan(environment, agents, timesteps, cprob=0.0, ctime=-1):
         agent_plans[i] = agents[i].plan
 
     return agent_plans
+
+
+def next_step_given_beliefs_rewards(start_loc, beliefs, rewards, environment):
+    # out of goals in agent's knowledge, pick goal X with highest reward
+    max_goal = max(beliefs, key=beliefs.get)
+    if len(rewards.items()) != len(beliefs.keys()):
+        avg_other_goals = mean((value for key, value in rewards.items() if key not in beliefs.keys()))
+    else:
+        # all goals have already been observed!
+        avg_other_goals = -float('inf')
+
+    # make optimal step given information  
+    if rewards[max_goal] > avg_other_goals:
+        # move toward max goal
+        goal_loc = environment.goal_assignments[max_goal]
+        new_location, dist = next_optimal_step(start_loc, goal_loc, environment.obstacle_map)
+    else:
+        # move toward nearest unobserved goal
+        dist = float('inf')
+        new_location = start_loc
+        for key in rewards.keys() - beliefs.keys():
+            next_loc = environment.goal_assignments[key]
+            if next_loc != None:
+                ln, ldist = next_optimal_step(start_loc, next_loc, environment.obstacle_map)
+                if ldist < dist:
+                    dist = ldist
+                    new_location = ln
+
+    return new_location, dist
 
 
 def next_optimal_step(start_loc, goal, occupancy_map): # returns a tuple: next optimal location, distance of shortest path to goal
