@@ -34,11 +34,11 @@ def infer_communication(agents, environment, t):
 
         cur_loc = agent.plan.get_location_at_time(t)
 
-        print(prev_beliefs_given_comm, prev_beliefs_given_no_comm, t)
+        #print(prev_beliefs_given_comm, prev_beliefs_given_no_comm, agent.plan._knowledge_at_each_time, t)
 
         if cur_loc_given_comm == cur_loc:
             if cur_loc_given_comm == cur_loc_given_no_comm: # communication would not change agent's behavior
-                communication_posterior[agent.name] = 0.5
+                communication_posterior[agent.name] = 0.2
             else: # strong evidence for communication over no-comm
                 communication_posterior[agent.name] = 0.9
         else: # strong evidence for no-comm
