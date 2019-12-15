@@ -12,7 +12,6 @@ class Agent:
 
     def get_visible_goals(self, loc=None):
         # return dictionary of visible goals in agent's line of sight
-        # goal: reward
         if loc==None: loc = self.location
 
         visible_goals = {}

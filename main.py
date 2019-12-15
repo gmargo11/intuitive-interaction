@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 
 
-
+# two goals example for testing purposes
 def two_goals_example():
     # define environment
     obstacle_map = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -47,10 +47,9 @@ def two_goals_example():
          plt.waitforbuttonpress()
     plt.show()
 
-    # infer communication
-    #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
 
-def three_goals_example():
+# four goals example used to construct scenarios
+def four_goals_example():
     # define environment
     obstacle_map = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                             [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -78,16 +77,11 @@ def three_goals_example():
     env = Environment(obstacle_map=obstacle_map, goal_locations=goal_locations, goal_assignments=goal_assignments)
 
 
-
     agent1 = Agent(name="A1", rewards={'A': 3, 'B': 5, 'C': 10, 'D': 5, 'E': 5}, initial_location=(9, 10), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
     agent2 = Agent(name="A2", rewards={'A': 5, 'B': 8, 'C': 7, 'D': 3, 'E': 5}, initial_location=(15, 10), initial_beliefs=np.array([[0.5, 0.5], [0.5, 0.5]]), environment=env)
 
-
-
     # generate plans
-    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=-1)
-    # for p in plan:
-    #     print(plan[p]._location_at_each_time)
+    plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=6)
 
     fig = plt.figure()
     vis_map_state = True    
@@ -107,6 +101,7 @@ def three_goals_example():
         #    probs[goal].append(g[goal])
     #       fig = plt.figure()
         if vis_map_state:
+           #fig = plt.figure()
            plt.cla()
            ax = plt.subplot(1, 2, 1)
            plt.cla()
@@ -122,7 +117,7 @@ def three_goals_example():
     print(communication)
 
     # plot goal probabilities
-    # timesteps = [i for i in range(33)]
+    # timesteps = [i for i in range(agent1.plan.get_duration())]
     # plt.plot(timesteps, probs[(3, 12)],marker='',linewidth=2, linestyle=':',label='A')
     # plt.plot(timesteps, probs[(9, 14)],marker='',linewidth=2, linestyle='-',label='B')
     # plt.plot(timesteps, probs[(15, 14)],marker='',linewidth=2, linestyle='--',label='C')
@@ -139,9 +134,15 @@ def three_goals_example():
     # plt.plot(timesteps, [0,0,0,0,0,0,0,.02,0],marker='',linewidth=2, linestyle='-',label='B')
     # plt.plot(timesteps, [.3,.3,.37,.57,.6,.73,.83,.97,1],marker='',linewidth=2, linestyle='--',label='C')
     # plt.plot(timesteps, [.37,.37,.33,.33,.23,.23,.13,.02,0],marker='',linewidth=2, linestyle='-.',label='D')
+
+    # plot communication probabilities
+    # plt.figure()
+    # timesteps = range(1, len(communication)+1)
+    # plt.plot(timesteps, communication,marker='',linewidth=2, linestyle=':',label='Probability of Communication')
+    # plt.ylim([0, 1])
     # plt.xlabel('Timestep')
     # plt.ylabel('Probability')
-    # plt.title('Probability of Each Goal Location')
+    # plt.title('Probability of Communication')
     # plt.legend()
     # plt.show()
     
@@ -159,38 +160,25 @@ def three_goals_example():
 
     # plot human inferred communication probabilities
     plt.figure()
-    #timesteps = [0,4,5,6,7,11,12,17,22]
-    timesteps = [0,5,8,10,14,15,17,21,22,25,30,33]
-    responses_scenario_2 = [[0.1, 0.1, 0.3, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5],
-                            [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15],
-                            [0.15, 0.15, 0.15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
-                            [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 0, 0, 0, 0],
-                            [0.3, 0.1, 0.2, 0.2, 0.2, 0.05, 0.05, 0.15, 0.15, 0.15, 0.15, 0.15]]
-    #responses_scenario_3 = [[0.15, 0.2, 0.2, 0.4, 0.45, 0.8, 0.8, 0.8, 0.9],
-    #                        [0.15, 0.15, 0.15, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
-    #                        [0.15, 0.15, 0.15, 0.5, 0.6, 0.8, 0.9, 0.9, 0.95],
-    #                        [0.0, 0.1, 0.1, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
-    #                        [0.15, 0.15, 0.15, 0.8, 0.8, 0.8, 0.9, 0.95, 1.0]]
-    plt.plot(timesteps, np.mean(responses_scenario_2, axis=0),marker='',linewidth=2, linestyle=':')
+    timesteps = [0,4,5,6,7,11,12,17,22]
+    #timesteps = [0,5,8,10,14,15,17,21,22,25,30,33]
+    #responses_scenario_2 = [[0.1, 0.1, 0.3, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5],
+    #                        [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15],
+    #                        [0.15, 0.15, 0.15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+    #                        [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 0, 0, 0, 0],
+    #                        [0.3, 0.1, 0.2, 0.2, 0.2, 0.05, 0.05, 0.15, 0.15, 0.15, 0.15, 0.15]]
+    responses_scenario_3 = [[0.15, 0.2, 0.2, 0.4, 0.45, 0.8, 0.8, 0.8, 0.9],
+                            [0.15, 0.15, 0.15, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
+                            [0.15, 0.15, 0.15, 0.5, 0.6, 0.8, 0.9, 0.9, 0.95],
+                            [0.0, 0.1, 0.1, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
+                            [0.15, 0.15, 0.15, 0.8, 0.8, 0.8, 0.9, 0.95, 1.0]]
+    plt.plot(timesteps, np.mean(responses_scenario_3, axis=0),marker='',linewidth=2, linestyle=':')
     plt.ylim([0, 1])
     plt.xlabel('Timestep')
     plt.ylabel('Probability')
     plt.title('Probability of Communication')
     plt.show()
-    
-
-    # infer communication
-    #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
-    # generate GIF
-    # fig2 = plt.figure()
-    # maps = []
-    # for t in range(agent1.plan.get_duration()):
-    #      maps.append([display_map_state(environment=env, agents=[agent1, agent2], t=t)])
-    # print(maps)
-    # ani = animation.ArtistAnimation(fig2, maps, interval=200, blit=True,
-    #                             repeat_delay=1000)
-    # ani.save('scenario2.gif', writer='pillow')
 
 
 if __name__ == "__main__":
-    three_goals_example()
+    four_goals_example()
