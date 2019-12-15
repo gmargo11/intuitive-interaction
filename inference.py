@@ -11,16 +11,10 @@ def infer_communication(agents, environment, t):
         total_knowledge.update(agent.plan.get_knowledge_at_time(t-1))
 
     for agent in agents:
-        # infer agent goals at the previous time and this time
-        prev_goals = infer_goal(agent, t-1)
-        cur_goals = infer_goal(agent, t)
-        prev_goal = max(prev_goals, key=prev_goals.get)
-        cur_goal = max(cur_goals, key=cur_goals.get)
 
         # if an agent's goal changed and visible goals did not change, probability of communication is high.
         prev2_knowledge = agent.plan.get_knowledge_at_time(t-2)
         prev2_loc = agent.plan.get_location_at_time(t-2)
-        prev_knowledge = agent.plan.get_knowledge_at_time(t-1)
         prev_loc = agent.plan.get_location_at_time(t-1)
         prev_beliefs_given_no_comm = {**agent.get_visible_goals(loc=prev_loc), **prev2_knowledge}
         prev_beliefs_given_comm = {**prev_beliefs_given_no_comm, **total_knowledge}
@@ -38,11 +32,11 @@ def infer_communication(agents, environment, t):
 
         if cur_loc_given_comm == cur_loc:
             if cur_loc_given_comm == cur_loc_given_no_comm: # communication would not change agent's behavior
-                communication_posterior[agent.name] = 0.2
+                communication_posterior[agent.name] = 0.3
             else: # strong evidence for communication over no-comm
                 communication_posterior[agent.name] = 0.9
         else: # strong evidence for no-comm
-            communication_posterior[agent.name] = 0.1
+            communication_posterior[agent.name] = 0.15
 
 
     # TODO a better extension: if the agent's goal changed in a way that 

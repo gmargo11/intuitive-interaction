@@ -133,6 +133,7 @@ def three_goals_example():
     # plt.legend()
     # plt.show()
 
+    # plot human inferred goals
     # timesteps = [0,4,5,6,7,11,12,17,22]
     # plt.plot(timesteps, [.63,.63,.6,.1,.03,.03,.03,0,0],marker='',linewidth=2, linestyle=':',label='A')
     # plt.plot(timesteps, [0,0,0,0,0,0,0,.02,0],marker='',linewidth=2, linestyle='-',label='B')
@@ -146,16 +147,37 @@ def three_goals_example():
     
     # plot communication probabilities
     plt.figure()
+    comm_so_far = [max(communication[:i+1]) for i in range(len(communication))]
     timesteps = range(1, len(communication)+1)
-    plt.plot(timesteps, communication,marker='',linewidth=2, linestyle=':',label='Probability of Communication')
+    plt.plot(timesteps, comm_so_far,marker='',linewidth=2, linestyle=':')
     plt.ylim([0, 1])
     #plt.plot(timesteps, 1-communication,marker='',linewidth=2, linestyle='-',label='B')
     plt.xlabel('Timestep')
     plt.ylabel('Probability')
     plt.title('Probability of Communication')
-    plt.legend()
-    plt.show()
 
+
+    # plot human inferred communication probabilities
+    plt.figure()
+    #timesteps = [0,4,5,6,7,11,12,17,22]
+    timesteps = [0,5,8,10,14,15,17,21,22,25,30,33]
+    responses_scenario_2 = [[0.1, 0.1, 0.3, 0.3, 0.3, 0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5],
+                            [0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15],
+                            [0.15, 0.15, 0.15, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
+                            [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.5, 0, 0, 0, 0],
+                            [0.3, 0.1, 0.2, 0.2, 0.2, 0.05, 0.05, 0.15, 0.15, 0.15, 0.15, 0.15]]
+    #responses_scenario_3 = [[0.15, 0.2, 0.2, 0.4, 0.45, 0.8, 0.8, 0.8, 0.9],
+    #                        [0.15, 0.15, 0.15, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
+    #                        [0.15, 0.15, 0.15, 0.5, 0.6, 0.8, 0.9, 0.9, 0.95],
+    #                        [0.0, 0.1, 0.1, 0.9, 0.9, 0.9, 0.9, 0.9, 0.9],
+    #                        [0.15, 0.15, 0.15, 0.8, 0.8, 0.8, 0.9, 0.95, 1.0]]
+    plt.plot(timesteps, np.mean(responses_scenario_2, axis=0),marker='',linewidth=2, linestyle=':')
+    plt.ylim([0, 1])
+    plt.xlabel('Timestep')
+    plt.ylabel('Probability')
+    plt.title('Probability of Communication')
+    plt.show()
+    
 
     # infer communication
     #communication_prob_at_each_time = infer_communication(environment=env, agents=[agent1, agent2], plan=plan)
