@@ -11,11 +11,11 @@ def infer_communication(agents, environment, t):
         total_knowledge.update(agent.plan.get_knowledge_at_time(t-1))
 
     for agent in agents:
-        # infer agent goals at the previous time and this time
-        prev_goals = infer_goal(agent, t-1)
-        cur_goals = infer_goal(agent, t)
-        prev_goal = max(prev_goals, key=prev_goals.get)
-        cur_goal = max(cur_goals, key=cur_goals.get)
+        # # infer agent goals at the previous time and this time
+        # prev_goals = infer_goal(agent, t-1)
+        # cur_goals = infer_goal(agent, t)
+        # prev_goal = max(prev_goals, key=prev_goals.get)
+        # cur_goal = max(cur_goals, key=cur_goals.get)
 
         # if an agent's goal changed and visible goals did not change, probability of communication is high.
         prev2_knowledge = agent.plan.get_knowledge_at_time(t-2)
@@ -27,11 +27,6 @@ def infer_communication(agents, environment, t):
 
         cur_loc_given_no_comm, dist = next_step_given_beliefs_rewards(prev_loc, prev_beliefs_given_no_comm, agent.rewards, environment)
         cur_loc_given_comm, dist = next_step_given_beliefs_rewards(prev_loc, prev_beliefs_given_comm, agent.rewards, environment)
-
-        #no_comm_agent = Agent(name='no_comm',  )
-
-        #print(prev_goal, cur_goal, prev_knowledge, cur_knowledge)
-
         cur_loc = agent.plan.get_location_at_time(t)
 
         print(prev_beliefs_given_comm, prev_beliefs_given_no_comm, t)
@@ -63,34 +58,13 @@ def infer_goal(agent, t):
     cur_loc = agent.plan.get_location_at_time(t)
 
     # inverse planning: get actions agent would have taken on the last timestep given different goals
-    # rational_goals = []
-    # n_goals = 0
-    # for goal in agent.rewards.keys():
-    #     goal_loc = agent.environment.goal_assignments[goal]
-    #     if goal_loc != None:
-    #         n_goals += 1
-    #         next_loc, dist = next_optimal_step(prev_loc, goal_loc, agent.environment.obstacle_map)
-    #         if next_loc == cur_loc:
-    #             rational_goals += [goal]
-
     rational_goals = []
     for goal_loc in agent.environment.goal_locations:
         next_loc, dist = next_optimal_step(prev_loc, goal_loc, agent.environment.obstacle_map)
         if next_loc == cur_loc:
             rational_goals += [goal_loc]
 
-    # goal_posterior = {}
-    # n_rational_goals = len(rational_goals)
-    # # n_goals = len(agent.rewards.keys())
-    # for goal in agent.rewards.keys():
-    #     if goal in rational_goals:
-    #         goal_posterior[goal] = 0.9 / n_rational_goals + 0.1 / n_goals
-    #     else:
-    #         goal_loc = agent.environment.goal_assignments[goal]
-    #         if goal_loc != None:
-    #             goal_posterior[goal] = 0.1 / n_goals
-    #         else:
-    #             goal_posterior[goal] = 0
+    # determine goal probabilities
     goal_posterior = {}
     n_rational_goals = len(rational_goals)
     n_goals = len(agent.environment.goal_locations)
