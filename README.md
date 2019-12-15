@@ -1,1 +1,1 @@
-# intuitive-interaction
+This repository contains code written for a course project in MIT 6.804: Computational Cognitive Science. For the details of our approach and results, read the write-up [here](https://github.com/gmargo11/intuitive-interaction/blob/master/paper.pdf).
