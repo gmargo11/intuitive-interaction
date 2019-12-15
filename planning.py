@@ -9,8 +9,16 @@ def create_plan(environment, agents, timesteps, cprob=0.0, ctime=-1):
         for ai in range(len(agents)):
             a = agents[ai]
             plan = a.plan
-    		# update agent's knowledge with what it can sees
+
+            # make optimal move given previous beliefs
+            new_location, dist = next_step_given_beliefs_rewards(a.location, a.knowledge, a.rewards, environment)
+            if dist > 0:
+                a.location = new_location
+                plan.set_location(t, a.location)
+
+    		# update agent's knowledge with what it can now see
             a.knowledge.update(a.get_visible_goals())
+
     		# randomly choose to communicate or not with some probability
             communicate = np.random.choice([True,False],p=[cprob, 1-cprob])
             #communicate = np.random.choice([True,False],p=[0, 1])
@@ -21,11 +29,9 @@ def create_plan(environment, agents, timesteps, cprob=0.0, ctime=-1):
                 # acquire other agent's knowledge
                 a.knowledge.update(info_agent.knowledge)
 
-            new_location, dist = next_step_given_beliefs_rewards(a.location, a.knowledge, a.rewards, environment)
+            
             
             if dist > 0:
-                a.location = new_location
-                plan.set_location(t, a.location)
                 plan.set_knowledge(t, a.knowledge.copy())
 
 

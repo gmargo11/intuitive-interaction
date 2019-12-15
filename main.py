@@ -84,7 +84,7 @@ def four_goals_example():
     plan = create_plan(environment=env, agents=[agent1, agent2], timesteps=80, cprob=0.0, ctime=-1)
 
     fig = plt.figure()
-    vis_map_state = True
+    vis_map_state = True    
 
     maps = []
     inferences = []
@@ -93,9 +93,9 @@ def four_goals_example():
     for goal_loc in env.goal_locations:
         probs[goal_loc] = []
     for t in range(agent1.plan.get_duration()):
-        #c = infer_communication(agents=[agent1,agent2], environment=env,t=t)
-        #if 'A1' in c:
-        #   communication.append(c['A1'])
+        c = infer_communication(agents=[agent1,agent2], environment=env,t=t)
+        if 'A1' in c:
+           communication.append(c['A1'])
         # g = infer_goal(agent1, t)
         # for goal in g:
         #    probs[goal].append(g[goal])
@@ -116,7 +116,7 @@ def four_goals_example():
     print(len(communication))
     print(communication)
 
-    # plot probabilities
+    # plot goal probabilities
     # timesteps = [i for i in range(agent1.plan.get_duration())]
     # plt.plot(timesteps, probs[(3, 12)],marker='',linewidth=2, linestyle=':',label='A')
     # plt.plot(timesteps, probs[(9, 14)],marker='',linewidth=2, linestyle='-',label='B')
@@ -125,6 +125,18 @@ def four_goals_example():
     # plt.xlabel('Timestep')
     # plt.ylabel('Probability')
     # plt.title('Probability of Each Goal Location')
+    # plt.legend()
+    # plt.show()
+
+
+    # plot communication probabilities
+    # plt.figure()
+    # timesteps = range(1, len(communication)+1)
+    # plt.plot(timesteps, communication,marker='',linewidth=2, linestyle=':',label='Probability of Communication')
+    # plt.ylim([0, 1])
+    # plt.xlabel('Timestep')
+    # plt.ylabel('Probability')
+    # plt.title('Probability of Communication')
     # plt.legend()
     # plt.show()
 

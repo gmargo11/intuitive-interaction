@@ -7,7 +7,7 @@ class Agent:
         self.initial_beliefs = initial_beliefs
         self.environment = environment
         self.plan = Plan(initial_location=initial_location, initial_knowledge=self.get_visible_goals(loc=initial_location))
-        self.knowledge = {}
+        self.knowledge = {**self.get_visible_goals(loc=initial_location)}
         self.name = name
 
     def get_visible_goals(self, loc=None):
